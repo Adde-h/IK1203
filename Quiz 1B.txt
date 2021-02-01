@@ -1,0 +1,43 @@
+1.
+IEEE 802.11b/g/n : Wireless Local Access
+Ethernet : Wired Local Acess
+ADSL : Access over fixed telephone line
+3G, 4G (LTE) : Access over mobile network
+DOCSIS : Access over cable TV Network
+
+2.
+Connects to the end user (home, company, university, etc) : A ISP
+Often has international coverage: T1 ISP
+A meetling place where ISPs connect to each other: IXP
+Is usually a customer of one (or more) Tier 1 ISPs, and is being charged for sending and receiving traffic. : A ISP
+Have mutual agreements for exchanging traffic with each other, free of charge ("peering agreements"). : T1 ISP
+
+3.
+Application layer: Rules for communication
+Transport layer: Provides support for communication... on diff hosts
+Network layer: Provides support for communication between hosts, via any routers in between
+Link layer: Provides support for communication between directly connected...
+Physical layer: Defines for instance electrical and optical propeties...
+
+4.
+Application layer: SMTP
+Transport layer: TCP
+Network layer: IP
+Link layer: Ethernet
+
+5.
+A server has a fixed address in the network.
+In practice, a server can consist of many computers that are reached at a common address.
+Clients do not communicate directly with each other.
+
+6.
+P2P networks rely on the principle that users make their resources available for sharing (resources for storage, communication, processing, etc).
+A P2P network has no predefined structure. Instead, it is formed dynamically by the nodes ("peers") that for the moment are participating in the network (sharing a file, for instance).
+
+7.
+HTTP is a text-based protocol (not binary), which means that HTTP requests and responses are transmitted in text format.
+By using web caches it is possible to reduce the response time for client requests.
+Each web object (page, image, movie, etc.) has a unique identifier that can be used to address the object.
+
+8.
+http://www.wagstaff.info:8080/horse.html
