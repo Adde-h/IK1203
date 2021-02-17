@@ -9,75 +9,52 @@ public class TCPClient
     
     public static String askServer(String hostname, int port, String ToServer) throws  IOException 
     {
-        if (ToServer == null)
+        if (ToServer == null)                                   //If there is not a message to send to server
         {
-            return askServer(hostname, port);
+            return askServer(hostname, port);                   //Run second function
         }
 
-        Socket clientSocket = new Socket(hostname, port);
+        Socket clientSocket = new Socket(hostname, port);       //Creating a socket
+        clientSocket.setSoTimeout(2000);                        //Timeout 2 sec
+
         InputStream input = clientSocket.getInputStream();      //Input from server
         OutputStream output = clientSocket.getOutputStream();   //Output to server
 
-        byte[] toServerBuffer = encode(ToServer);
-        output.write(toServerBuffer);
-        clientSocket.setSoTimeout(12000);
+        byte[] toServerBuffer = encode(ToServer);               //Encoding message to UTF-8 and saving in bytearray
+        byte[] fromServerBuffer = new byte[BUFFERSIZE];         //Creating bytearray with BUFFERSIZE size
+        output.write(toServerBuffer);                           //Sending the TCP Message to the server
 
-        byte[] fromServerBuffer = new byte[BUFFERSIZE];
-        int fromServerLength = 0;
+        int fromServerLength = input.read(fromServerBuffer);    //Reading the TCP Message from the server and determening the size
+        clientSocket.close();                                   //Closing the TCP Connection
 
-        StringBuilder fromServer = new StringBuilder();
-        while(fromServerLength != -1)
-        {
-            fromServerLength = input.read(fromServerBuffer);
-            if(fromServerLength != -1)
-            {
-                fromServer.append(decode(fromServerBuffer, fromServerLength));
-            }
-        }
-        
-        clientSocket.close();
-        String serverMessage = fromServer.toString();
-
-        return serverMessage;
+        return (decode(fromServerBuffer, fromServerLength));    //Decoding the fromServerBuffer message from the server until fromServerLength
     }
 
     public static String askServer(String hostname, int port) throws  IOException 
-    {
-        Socket clientSocket = new Socket(hostname, port);
+    { 
+        Socket clientSocket = new Socket(hostname, port);       //Creating a socket
+        clientSocket.setSoTimeout(2000);                        //Timeout 2 sec
+
         InputStream input = clientSocket.getInputStream();      //Input from server
 
-        clientSocket.setSoTimeout(12000);
-        byte[] fromServerBuffer = new byte[BUFFERSIZE];
+        byte[] fromServerBuffer = new byte[BUFFERSIZE];         //Creating bytearray with BUFFERSIZE size
 
-        int fromServerLength = 0;
-      
-        StringBuilder fromServer = new StringBuilder();
-        while(fromServerLength != -1)
-        {
-            fromServerLength = input.read(fromServerBuffer);
-            if(fromServerLength != -1)
-            {
-                fromServer.append(decode(fromServerBuffer, fromServerLength));
-            }
+        int fromServerLength = input.read(fromServerBuffer);    //Reading the TCP Message from the server and determening the size
+        clientSocket.close();                                   //Closing the TCP Connection
 
-        }
-
-        clientSocket.close();
-        String serverMessage = fromServer.toString();
-
-        return serverMessage;
+        return (decode(fromServerBuffer, fromServerLength));    //Decoding the fromServerBuffer message from the server until fromServerLength
 
     }
 
     private static String decode(byte[] bytes, int length) throws UnsupportedEncodingException
     {
-        String string = new String(bytes, 0, length, "UTF-8");
+        String string = new String(bytes, 0, length, "UTF-8");  //Creating a string that takes bytearray and decodes it using UTF-8 from 0 array to lenght of array
         return string;
     }
 
     private static byte[] encode(String string) throws UnsupportedEncodingException
     {
-        byte[] bytes = string.getBytes("UTF-8");
+        byte[] bytes = string.getBytes("UTF-8");                //Encodes the string to UTF-8 bytearray
         return bytes;
     }
 
