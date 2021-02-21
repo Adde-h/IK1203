@@ -7,38 +7,47 @@ public class HTTPEcho
 {
     static int BUFFERSIZE = 1024;
 
-    public static void main(String[] args) throws IOException 
+    public static void main(String[] args) throws Exception 
     {
         int port = Integer.parseInt(args[0]);                           //Converting string to int
         ServerSocket welcomeSocket = new ServerSocket(port);            //Creating a socket to communicate with the server
 
-        while(true)
-        {
-            Socket connectionSocket = welcomeSocket.accept();           //Creating a new socket for communication with the client
-            InputStream input = connectionSocket.getInputStream();      //Input from client
-            byte[] fromClientBuffer = new byte[BUFFERSIZE];
-                                             
-            connectionSocket.setSoTimeout(2000);
-
-            StringBuilder sb = new StringBuilder();
-
-            sb.append("HTTP/1.1 200 OK \r\n");
-            int fromClientLength = 0;  
-
-           while(fromClientLength != -1)
+       try
+       {
+            while(true)
             {
-                sb.append(decode(fromClientBuffer, fromClientLength) + "\r\n");
-                fromClientLength = input.read(fromClientBuffer);        //Reads from client and stores length
+                Socket connectionSocket = welcomeSocket.accept();           //Creating a new socket for communication with the client
+                InputStream input = connectionSocket.getInputStream();      //Input from client
+                
+                byte[] fromClientBuffer = new byte[BUFFERSIZE];
+                int fromClientLength = input.read(fromClientBuffer);                           
+                connectionSocket.setSoTimeout(2000);
+                
+                StringBuilder sb = new StringBuilder();
+                
+                //String checkMsg = "HTTP/1.1 200 OK \r\n\r\n";
+                sb.append("HTTP/1.1 200 OK \r\n\r\n");
+                sb.append("Hello \r\n\r\n");
 
+                /*while(checkMsg != "" && checkMsg.length() != 0)
+                {
+                    sb.append(checkMsg + "\r\n");
+                    checkMsg = decode(fromClientBuffer, fromClientLength);
+                    fromClientLength = input.read(fromClientBuffer);        //Reads from client and stores length
+                }
+                */
+                OutputStream output = connectionSocket.getOutputStream();   //Output from server
+                byte[] toClientBuffer = encode(sb.toString());              //Store message from server
+                output.write(toClientBuffer);                               //Output from server to client
+                
+                connectionSocket.close();           
             }
-
-            OutputStream output = connectionSocket.getOutputStream();   //Output from server
-            byte[] toClientBuffer = encode(sb.toString());              //Store message from server
-            output.write(toClientBuffer);                               //Output from server to client
-            
-            connectionSocket.close();           
+       }
+        catch (Exception e) 
+        {
+            System.out.println("Exception");
         }
-
+        
     }
     
     private static byte[] encode(String string) throws UnsupportedEncodingException
