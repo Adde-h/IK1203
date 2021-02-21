@@ -1,4 +1,4 @@
-package tcpclient;
+package task1.tcpclient;
 
 import java.net.*;
 import java.io.*;
@@ -24,23 +24,10 @@ public class TCPClient
         byte[] fromServerBuffer = new byte[BUFFERSIZE];         //Creating bytearray with BUFFERSIZE size
         output.write(toServerBuffer);                           //Sending the TCP Message to the server
 
-        StringBuilder sb = new StringBuilder();
-        int fromServerLength = 0;
-        try 
-        {
-            while(fromServerLength != -1)
-            {
-                sb.append(decode(fromServerBuffer,fromServerLength));
-                fromServerLength = input.read(fromServerBuffer);    //Reading the TCP Message from the server and determening the size
-            }
-        } 
-        catch (Exception socketTimeoutException) 
-        {
-        }
-
+        int fromServerLength = input.read(fromServerBuffer);    //Reading the TCP Message from the server and determening the size
         clientSocket.close();                                   //Closing the TCP Connection
-        return sb.toString();    
 
+        return (decode(fromServerBuffer, fromServerLength));    //Decoding the fromServerBuffer message from the server until fromServerLength
     }
 
     public static String askServer(String hostname, int port) throws  IOException 
@@ -51,24 +38,11 @@ public class TCPClient
         InputStream input = clientSocket.getInputStream();      //Input from server
 
         byte[] fromServerBuffer = new byte[BUFFERSIZE];         //Creating bytearray with BUFFERSIZE size
-        StringBuilder sb = new StringBuilder();
-        int fromServerLength = 0;
 
-        try 
-        {
-            while(fromServerLength != -1 && fromServerLength < 255)
-            {
-                sb.append(decode(fromServerBuffer,fromServerLength));
-                fromServerLength = input.read(fromServerBuffer);    //Reading the TCP Message from the server and determening the size
-
-            }
-        }
-        catch (Exception socketTimeoutException) 
-        {
-        }
-
+        int fromServerLength = input.read(fromServerBuffer);    //Reading the TCP Message from the server and determening the size
         clientSocket.close();                                   //Closing the TCP Connection
-        return sb.toString();    
+
+        return (decode(fromServerBuffer, fromServerLength));    //Decoding the fromServerBuffer message from the server until fromServerLength
 
     }
 
