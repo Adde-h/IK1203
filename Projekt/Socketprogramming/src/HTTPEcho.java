@@ -1,11 +1,9 @@
 import java.net.*;
-
-
 import java.io.*;
 
 public class HTTPEcho 
 {
-    static int BUFFERSIZE = 1024;
+    static int BUFFERSIZE = 10000;
 
     public static void main(String[] args) throws Exception 
     {
@@ -20,28 +18,24 @@ public class HTTPEcho
                 InputStream input = connectionSocket.getInputStream();      //Input from client
                 
                 byte[] fromClientBuffer = new byte[BUFFERSIZE];
-                int fromClientLength = 0;//input.read(fromClientBuffer);                           
+                int fromClientLength = 0;                           
                 connectionSocket.setSoTimeout(2000);
                 
                 StringBuilder sb = new StringBuilder();
-                
-                String checkMsg = "HTTP/1.1 200 OK \r\n\r\n";
-                //sb.append("HTTP/1.1 200 OK \r\n\r\n");
-                //sb.append("Hello \r\n\r\n");
-                int i = 0;
-                while(checkMsg != "\n")
+                String checkMsg = new String();
+
+                while(!checkMsg.contains(""));
                 {
-                    System.out.println("start");
-                    sb.append(checkMsg + "\r\n");
+                    sb.append("HTTP/1.1 200 OK \r\n\r\n");
                     fromClientLength = input.read(fromClientBuffer);        //Reads from client and stores length
                     checkMsg = decode(fromClientBuffer, fromClientLength);
-                    System.out.println(checkMsg);
+                    sb.append(checkMsg + "\r\n");
                 }
-                
+
                 OutputStream output = connectionSocket.getOutputStream();   //Output from server
-                byte[] toClientBuffer = encode(checkMsg);              //Store message from server
+                byte[] toClientBuffer = encode(sb.toString());                   //Store message from server
                 output.write(toClientBuffer);                               //Output from server to client
-                
+
                 connectionSocket.close();           
             }
        }
