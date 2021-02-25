@@ -23,17 +23,18 @@ public class HTTPEcho
                 
                 StringBuilder sb = new StringBuilder();
                 String checkMsg = new String();
-
+                
+                sb.append("HTTP/1.1 200 OK \r\n\r\n");
+                
                 while(!checkMsg.contains(""));
                 {
-                    sb.append("HTTP/1.1 200 OK \r\n\r\n");
                     fromClientLength = input.read(fromClientBuffer);        //Reads from client and stores length
                     checkMsg = decode(fromClientBuffer, fromClientLength);
                     sb.append(checkMsg + "\r\n");
                 }
 
                 OutputStream output = connectionSocket.getOutputStream();   //Output from server
-                byte[] toClientBuffer = encode(sb.toString());                   //Store message from server
+                byte[] toClientBuffer = encode(sb.toString());              //Store message from server
                 output.write(toClientBuffer);                               //Output from server to client
 
                 connectionSocket.close();           

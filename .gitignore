@@ -3,4 +3,5 @@ GitIgnore/
 Viritual Machine/IK1203.ova
 *.ova
 *.class
-Projekt/Socketprogramming/src/task1.zip
+*.zip
+Projekt/Socketprogrammering/
