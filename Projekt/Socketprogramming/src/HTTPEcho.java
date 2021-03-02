@@ -44,7 +44,7 @@ public class HTTPEcho
         }
         catch (SocketTimeoutException setSoTimeout) 
         {
-            System.out.println("Exception");
+            System.out.println("Socket Timeout Exception");
         }
         
     }

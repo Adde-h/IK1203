@@ -22,7 +22,7 @@ public class HTTPAsk
                 
                 byte[] fromClientBuffer = new byte[BUFFERSIZE];
                 int fromClientLength = 0;                           
-                //connectionSocket.setSoTimeout(2000);
+                connectionSocket.setSoTimeout(2000);
                 
                 StringBuilder sb = new StringBuilder();
                 String checkMsg = new String();
@@ -72,14 +72,12 @@ public class HTTPAsk
                 connectionSocket.close();           
             }
         }
-        catch (Exception e) 
+        catch (SocketTimeoutException socketTimeoutException) 
         {
-            System.out.println("Socket Timeout");
+            System.out.println("Socket Timeout Exception");
         }
 
     }
-
-
 
     private static byte[] encode(String string)
     {
