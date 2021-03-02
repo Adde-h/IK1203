@@ -1,0 +1,33 @@
+Localhost Tests from Task1
+
+-> Daytime
+http://localhost:8888/ask?hostname=time.nist.gov&port=13
+
+
+-> Daytime
+http://localhost:8888/ask?hostname=java.lab.ssvl.kth.se&port=13
+
+
+-> Whois
+http://localhost:8888/ask?hostname=whois.iis.se&port=43&string=WhoIsTest
+
+-> Internic
+http://localhost:8888/ask?hostname=whois.internic.net&port=43&string=InternicTest
+
+
+-> Echo
+http://localhost:8888/ask?hostname=java.lab.ssvl.kth.se&port=7&string=EchoTest
+
+-> Discard
+http://localhost:8888/ask?hostname=java.lab.ssvl.kth.se&port=9&string=DiscardTest
+
+-> Chargen
+http://localhost:8888/ask?hostname=java.lab.ssvl.kth.se&port=19
+
+
+
+
+
+
+
+

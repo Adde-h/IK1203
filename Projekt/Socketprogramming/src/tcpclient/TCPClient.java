@@ -2,6 +2,8 @@ package tcpclient;
 
 import java.net.*;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
+
 
 public class TCPClient 
 {
@@ -15,7 +17,7 @@ public class TCPClient
         }
 
         Socket clientSocket = new Socket(hostname, port);       //Creating a socket
-        clientSocket.setSoTimeout(2000);                        //Timeout 2 sec
+        //clientSocket.setSoTimeout(2000);                        //Timeout 2 sec
 
         InputStream input = clientSocket.getInputStream();      //Input from server
         OutputStream output = clientSocket.getOutputStream();   //Output to server
@@ -46,7 +48,7 @@ public class TCPClient
     public static String askServer(String hostname, int port) throws  IOException 
     { 
         Socket clientSocket = new Socket(hostname, port);       //Creating a socket
-        clientSocket.setSoTimeout(2000);                        //Timeout 2 sec
+        //clientSocket.setSoTimeout(2000);                        //Timeout 2 sec
 
         InputStream input = clientSocket.getInputStream();      //Input from server
 
@@ -63,7 +65,7 @@ public class TCPClient
 
             }
         }
-        catch (Exception socketTimeoutException) 
+        catch (SocketTimeoutException setSoTimeout) 
         {
         }
 
@@ -72,17 +74,18 @@ public class TCPClient
 
     }
 
-    private static String decode(byte[] bytes, int length) throws UnsupportedEncodingException
+    
+    private static byte[] encode(String string)
     {
-        String string = new String(bytes, 0, length, "UTF-8");  //Creating a string that takes bytearray and decodes it using UTF-8 from 0 array to lenght of array
-        return string;
+        return string.getBytes(StandardCharsets.UTF_8);                //Encodes the string to UTF-8 bytearray
+   
     }
 
-    private static byte[] encode(String string) throws UnsupportedEncodingException
+    private static String decode(byte[] bytes, int length)
     {
-        byte[] bytes = string.getBytes("UTF-8");                //Encodes the string to UTF-8 bytearray
-        return bytes;
+        return new String(bytes, 0, length, StandardCharsets.UTF_8);  //Creating a string that takes bytearray and decodes it using UTF-8 from 0 array to lenght of array
     }
+
 
 }
 
