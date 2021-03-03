@@ -22,7 +22,7 @@ public class TCPClient
         InputStream input = clientSocket.getInputStream();      //Input from server
         OutputStream output = clientSocket.getOutputStream();   //Output to server
 
-        byte[] toServerBuffer = encode(ToServer);               //Encoding message to UTF-8 and saving in bytearray
+        byte[] toServerBuffer = encode(ToServer + "\r\n");      //Encoding message to UTF-8 and saving in bytearray
         byte[] fromServerBuffer = new byte[BUFFERSIZE];         //Creating bytearray with BUFFERSIZE size
         output.write(toServerBuffer);                           //Sending the TCP Message to the server
 
@@ -58,7 +58,7 @@ public class TCPClient
 
         try 
         {
-            while(fromServerLength != -1 && fromServerLength < 255)
+            while(fromServerLength != -1 && fromServerLength < 256)
             {
                 sb.append(decode(fromServerBuffer,fromServerLength));
                 fromServerLength = input.read(fromServerBuffer);    //Reading the TCP Message from the server and determening the size

@@ -5,9 +5,7 @@ import tcpclient.TCPClient;
 
 public class HTTPAsk 
 {
-
     static int BUFFERSIZE = 1024;
-
 
     public static void main(String[] args) throws IOException 
     {
@@ -22,7 +20,7 @@ public class HTTPAsk
                 
                 byte[] fromClientBuffer = new byte[BUFFERSIZE];
                 int fromClientLength = 0;                           
-                connectionSocket.setSoTimeout(2000);
+                connectionSocket.setSoTimeout(9000);
                 
                 StringBuilder sb = new StringBuilder();
                 String checkMsg = new String();
@@ -37,10 +35,18 @@ public class HTTPAsk
                 }
                 
                 String serverMessage = sb.toString();
-                String[] serverParameters = serverMessage.split("[?=& ]", 15);
-                String hostname = new String();
-                String toServer = new String();
+                String[] serverParameters = serverMessage.split("[?=& ]", 12);
+                String hostname = null;
+                String toServer = null;
+                String TCPClientMsg = new String();
                 int hostport = 0;
+                OutputStream output = connectionSocket.getOutputStream();   //Output from server
+
+
+                for (int i = 0; i < serverParameters.length; i++) 
+                {
+                    System.out.println(serverParameters[i]);
+                }
 
                 for (int i = 0; i < serverParameters.length; i++) 
                 {
@@ -56,19 +62,38 @@ public class HTTPAsk
                     {
                         toServer = serverParameters[i+1];
                     }
+                    else if (serverParameters[i].equals("GET"))
+                    {
+                        if(serverParameters[i+1] != "/ask")
+                        {
+                            TCPClientMsg = "HTTP/1.1 400 Bad Request \r\n\r\n";
+                            byte[] toClientBuffer = encode(TCPClientMsg);               //Store message from server
+                            output.write(toClientBuffer);                               //Output from server to client
+                            System.exit(1);
+                        }
+
+                    }
                 }
 
-                System.out.println(toServer);
+               
+                try 
+                {
+                    if((hostname != null) || (hostport != 0))
+                    {
+                        TCPClientMsg = "HTTP/1.1 200 OK \r\n\r\n" + TCPClient.askServer(hostname,hostport,toServer);
+                    }
+                    
+                } 
+                catch (IOException e) 
+                {
+                    TCPClientMsg = "HTTP/1.1 404 Not Found \r\n\r\n";
+                    byte[] toClientBuffer = encode(TCPClientMsg);               //Store message from server
+                    output.write(toClientBuffer);                               //Output from server to client
+                }
 
-                String TCPClientMsg = "HTTP/1.1 200 OK \r\n\r\n" + TCPClient.askServer(hostname,hostport,toServer);
-
-                System.out.println(TCPClientMsg);
-
-                OutputStream output = connectionSocket.getOutputStream();   //Output from server
                 byte[] toClientBuffer = encode(TCPClientMsg);               //Store message from server
                 output.write(toClientBuffer);                               //Output from server to client
                 
-
                 connectionSocket.close();           
             }
         }
