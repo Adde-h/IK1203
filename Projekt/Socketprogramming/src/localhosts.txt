@@ -20,11 +20,3 @@ http://localhost:8888/ask?hostname=java.lab.ssvl.kth.se&port=9&string=DiscardTes
 
 -> Chargen
 http://localhost:8888/ask?hostname=java.lab.ssvl.kth.se&port=19
-
-
-
-
-
-
-
-
