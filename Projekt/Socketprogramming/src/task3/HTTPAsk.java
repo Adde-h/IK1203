@@ -35,51 +35,63 @@ public class HTTPAsk
                 }
                 
                 String serverMessage = sb.toString();
-                String[] serverParameters = serverMessage.split("[?=& ]", 12);
+                String[] serverURL = serverMessage.split("\\r\\n");
+                String firstlineURL = serverURL[0];
+                String[] serverParameters = firstlineURL.split("[?=& ]", 12);
                 String hostname = null;
                 String toServer = null;
-                
+                String http400 = "HTTP/1.1 400 Bad Request";
+                String http404 = "HTTP/1.1 404 Not Found";
+                String http200 = "HTTP/1.1 200 OK \r\n\r\n";
                 int hostport = 0;
-                if((serverParameters[1].equals("/ask")) && (serverParameters[2].equals("hostname")) && (serverParameters[4].equals("port")))
+                
+                if((serverParameters[0].equals("GET")) && (serverParameters[1].equals("/ask")) && (serverParameters[2].equals("hostname")) && (serverParameters[4].equals("port")))
                 {
+                    /*  Used for writing out serverParameter array during testing
+                    for (int i = 0; i < serverParameters.length; i++) 
+                    {
+                        System.out.println(serverParameters[i]);
+                    }
+                    */
+
                     hostname = serverParameters[3];
                     hostport = Integer.parseInt(serverParameters[5]);
 
                     if (serverParameters[6].equals("string"))
                     {
-                        toServer = serverParameters[6];
+                        toServer = serverParameters[7];
                     }
-                    else if (!(serverParameters[6].equals("HTTP/1.1")))
+                    else if (!(serverParameters[serverParameters.length-1].equals("HTTP/1.1")))
                     {
-                        TCPClientMsg = "HTTP/1.1 400 Bad Request";
-                        byte[] toClientBuffer = encode(TCPClientMsg);               //Store message from server
-                        output.write(toClientBuffer);                               //Output from server to client
+                        TCPClientMsg = http400;
+                        byte[] toClientBuffer = encode(TCPClientMsg);           //Store message from server
+                        output.write(toClientBuffer);                           //Output from server to client
                     }
                 
                     try 
                     {
                         if((hostname != null) || (hostport != 0))
                         {
-                            TCPClientMsg = "HTTP/1.1 200 OK \r\n\r\n" + TCPClient.askServer(hostname,hostport,toServer);
+                            TCPClientMsg = http200 + TCPClient.askServer(hostname,hostport,toServer);
                         }
                         
                     } 
                     catch (IOException e) 
                     {
-                        TCPClientMsg = "HTTP/1.1 404 Not Found";
-                        byte[] toClientBuffer = encode(TCPClientMsg);               //Store message from server
-                        output.write(toClientBuffer);                              //Output from server to client
+                        TCPClientMsg = http404;
+                        byte[] toClientBuffer = encode(TCPClientMsg);           //Store message from server
+                        output.write(toClientBuffer);                           //Output from server to client
                     }
                 }
                 else
                 {
-                    TCPClientMsg = "HTTP/1.1 400 Bad Request";
+                    TCPClientMsg = http400;
                     byte[] toClientBuffer = encode(TCPClientMsg);               //Store message from server
                     output.write(toClientBuffer);                               //Output from server to client
                 }
                    
-                byte[] toClientBuffer = encode(TCPClientMsg);               //Store message from server
-                output.write(toClientBuffer);                               //Output from server to client
+                byte[] toClientBuffer = encode(TCPClientMsg);                   //Store message from server
+                output.write(toClientBuffer);                                   //Output from server to client
                 
                 connectionSocket.close();                        
             }
@@ -88,7 +100,6 @@ public class HTTPAsk
         {
             System.out.println("Socket Timeout Exception");
         }
-
     }
 
     private static byte[] encode(String string)
