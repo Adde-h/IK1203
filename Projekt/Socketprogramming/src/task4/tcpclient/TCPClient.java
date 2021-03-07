@@ -1,5 +1,4 @@
 package tcpclient;
-
 import java.net.*;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -17,7 +16,7 @@ public class TCPClient
         }
 
         Socket clientSocket = new Socket(hostname, port);       //Creating a socket
-        clientSocket.setSoTimeout(2000);                        //Timeout 2 sec
+        clientSocket.setSoTimeout(9000);                        //Timeout 2 sec
 
         InputStream input = clientSocket.getInputStream();      //Input from server
         OutputStream output = clientSocket.getOutputStream();   //Output to server
@@ -48,7 +47,7 @@ public class TCPClient
     public static String askServer(String hostname, int port) throws  IOException 
     { 
         Socket clientSocket = new Socket(hostname, port);       //Creating a socket
-        clientSocket.setSoTimeout(2000);                        //Timeout 2 sec
+        clientSocket.setSoTimeout(9000);                        //Timeout 2 sec
 
         InputStream input = clientSocket.getInputStream();      //Input from server
 
